@@ -180,7 +180,7 @@ public class ExampleSampleAuto extends OpMode {
                 break;
             case 9:
                 // Checks if the current path's t-value (path completion value) is greater than 0.95 (95% done)
-                if (follower.getCurrentTValue() > 0.95) {
+                if (follower.getCurrentTValue() > 0.94) {
                     /* Level 1 Ascent */
                     // Set the state to a case we won't use or define, so it just stops running a new path
                     setPathState(-1);
