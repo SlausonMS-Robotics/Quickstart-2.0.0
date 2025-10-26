@@ -1,37 +1,45 @@
 package org.firstinspires.ftc.teamcode.robot;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class motors {
 
-    private DcMotorEx liftMotor; // formerly motor0
+    private DcMotorEx shooterMotor1, shooterMotor0; // formerly motor0
 
     /**
      * Initializes the lift motor.
      * Add other motors here as needed.
      */
     public void init(HardwareMap hardwareMap) {
-        liftMotor = hardwareMap.get(DcMotorEx.class, "ehmotor0");
+        shooterMotor1 = hardwareMap.get(DcMotorEx.class, "ehmotor1");
+        shooterMotor0 = hardwareMap.get(DcMotorEx.class, "ehmotor0");
+        shooterMotor0.setDirection(DcMotorSimple.Direction.REVERSE);
+    }
+
+    public void shooterPower(double pow){
+        shooterMotor0.setPower(pow);
+        shooterMotor1.setPower(pow);
     }
 
     /**
      * Sets the lift motor target position and velocity.
      */
     public void setLiftMotor(int pos, int vel) {
-        if (liftMotor == null) return;
+        if (shooterMotor1 == null) return;
 
-        liftMotor.setTargetPosition(pos);
-        liftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        liftMotor.setVelocity(vel);
+        shooterMotor1.setTargetPosition(pos);
+        shooterMotor1.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        shooterMotor1.setVelocity(vel);
     }
 
     /**
      * Stops the lift motor.
      */
     public void stopLiftMotor() {
-        if (liftMotor != null) {
-            liftMotor.setPower(0);
+        if (shooterMotor1 != null) {
+            shooterMotor1.setPower(0);
         }
     }
 
@@ -39,8 +47,8 @@ public class motors {
      * Sets the lift motor's target position tolerance.
      */
     public void setLiftMotorPosTolerance(int tolerance) {
-        if (liftMotor != null) {
-            liftMotor.setTargetPositionTolerance(tolerance);
+        if (shooterMotor1 != null) {
+            shooterMotor1.setTargetPositionTolerance(tolerance);
         }
     }
 
@@ -48,33 +56,33 @@ public class motors {
      * Enables RUN_TO_POSITION mode for lift motor.
      */
     public void runToPosition(int pos, double power) {
-        if (liftMotor == null) return;
+        if (shooterMotor1 == null) return;
 
-        liftMotor.setTargetPosition(pos);
-        liftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        liftMotor.setPower(power);
+        shooterMotor1.setTargetPosition(pos);
+        shooterMotor1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        shooterMotor1.setPower(power);
     }
 
     /**
      * Checks if lift motor is still moving toward target.
      */
     public boolean isLiftBusy() {
-        return liftMotor != null && liftMotor.isBusy();
+        return shooterMotor1 != null && shooterMotor1.isBusy();
     }
 
     /**
      * Gets the current position of the lift motor.
      */
     public int getLiftPosition() {
-        return liftMotor != null ? liftMotor.getCurrentPosition() : 0;
+        return shooterMotor1 != null ? shooterMotor1.getCurrentPosition() : 0;
     }
 
     /**
      * Sets lift motor to brake or float when power is zero.
      */
     public void setLiftZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior behavior) {
-        if (liftMotor != null) {
-            liftMotor.setZeroPowerBehavior(behavior);
+        if (shooterMotor1 != null) {
+            shooterMotor1.setZeroPowerBehavior(behavior);
         }
     }
 }

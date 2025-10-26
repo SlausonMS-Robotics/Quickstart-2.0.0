@@ -5,15 +5,16 @@ import static org.firstinspires.ftc.teamcode.robot.servos.WRIST_FULL_RETRACTION_
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
-import  com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.pedropathing.util.Timer;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.robot.limelight3A;
+import org.firstinspires.ftc.teamcode.robot.limelight_helpers;
 import org.firstinspires.ftc.teamcode.robot.motors;
 import org.firstinspires.ftc.teamcode.robot.servos;
 
-import com.pedropathing.util.Timer;
 /**
  * This is an example teleop that showcases movement and field-centric driving.
  *
@@ -21,8 +22,8 @@ import com.pedropathing.util.Timer;
  * @version 2.0, 12/30/2024
  */
 
-@TeleOp(name = "Example Field-Centric Teleop", group = "Examples")
-public class ExampleFieldCentricTeleop extends OpMode {
+@TeleOp(name = "Megatags Field-Centric Teleop", group = "Examples")
+public class FieldCentricTeleopLLMegaTags extends OpMode {
     private Follower follower;
     private static double scalar = 1.0;
     private double xval = 0;
@@ -34,7 +35,7 @@ public class ExampleFieldCentricTeleop extends OpMode {
     servos grabServo = new servos();
 
     motors shooter = new motors();
-    //limelight3A limelight = new limelight3A();
+    limelight3A limelight = new limelight3A();
 
     private int state = 0;
     private boolean gripOpen = false;
@@ -52,7 +53,7 @@ public class ExampleFieldCentricTeleop extends OpMode {
         follower.setStartingPose(startPose);
         robotservo.init(hardwareMap);
         shooter.init(hardwareMap);
-        //limelight.init(hardwareMap,5, follower, telemetry);
+        limelight.init(hardwareMap,0, follower, telemetry);
         myTimer = new Timer();
         llTimer = new Timer();
         //robotservo.headlightOn();
@@ -69,6 +70,7 @@ public class ExampleFieldCentricTeleop extends OpMode {
     public void start() {
         follower.startTeleopDrive(false);
         robotservo.openGripper();
+        limelight.startLL(1);
     }
 
     /** This is the main loop of the opmode and runs continuously after play **/
@@ -84,7 +86,7 @@ public class ExampleFieldCentricTeleop extends OpMode {
 
         follower.update();
 
-        shooter.shooterPower(1);
+
 
         if(gamepad1.left_trigger > .1) {
             scalar = .5;
@@ -95,8 +97,8 @@ public class ExampleFieldCentricTeleop extends OpMode {
             follower.setTeleOpDrive(Math.pow(-gamepad1.left_stick_y * scalar,3), Math.pow(-gamepad1.left_stick_x * scalar,3), Math.pow(-gamepad1.right_stick_x * scalar,3), false);
         }
 
-        if(gamepad1.right_trigger > .1) {
-            shooter.shooterPower(gamepad1.right_trigger);
+        if(gamepad1.right_bumper) {
+            shooter.shooterPower(1.0);
         }
         else {
             shooter.shooterPower(0);
@@ -155,6 +157,14 @@ public class ExampleFieldCentricTeleop extends OpMode {
                 myTimer.resetTimer();
             }
         }
+
+        if(limelight.pollLimelight()) {
+                       //telemetry.addData("dist", dist);
+            telemetry.addData("dist", limelight.getLLAvgDist());
+            telemetry.addData("heading", limelight.result.getTx());
+        }
+        telemetry.update();
+
 /*
         if (gamepad1.right_trigger > .1) {
             if (!limelight.getLLStatus()) limelight.startLL(100);
@@ -166,22 +176,9 @@ public class ExampleFieldCentricTeleop extends OpMode {
         }
 
  */
-/*
-        if(gamepad1.a && !follower.isBusy()) {
-            if (!limelight.getLLStatus()) limelight.startLL(200);
-            if (limelight.pollLimelight()) {
-                //limelight.LLDriveTo();
-                follower.followPath(limelight.LLDriveTo());
-                follower.update();
-            }
-        }
 
-        if (llTimer.getElapsedTimeSeconds() >= 3 && limelight.getLLStatus()) {
-            limelight.stopLL();
-            llTimer.resetTimer();
-            follower.startTeleopDrive();
-        }
-*/
+
+
 
 
         /* Telemetry Outputs of our Follower

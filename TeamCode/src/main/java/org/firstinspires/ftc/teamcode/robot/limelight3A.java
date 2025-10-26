@@ -94,12 +94,14 @@ public class limelight3A {
 
         result = limelight.getLatestResult();
         if (result == null) return false;
-        parseLLData();
+        //parseLLData();
 
         return true;
     }
 
-
+    public double getLLAvgDist(){
+        return result.getBotposeAvgDist();
+    }
 
     public PathChain LLDriveTo(){
 
